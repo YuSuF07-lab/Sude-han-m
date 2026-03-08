@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Women's Day!</title>
+    <style>
+        /* CSS BÖLÜMÜ: Sayfanın tasarımı ve renkleri burada belirlenir */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fdfae3;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden; /* Dolar yağmuru ekranı taşırmasın diye */
+        }
+
+        .scene {
+            display: none; 
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease-in-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        .active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bouquet-area {
+            font-size: 100px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.3s;
+        }
+        
+        .bouquet-area:hover {
+            transform: scale(1.1);
+        }
+
+        .letter-content {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #333;
+            text-align: left;
+            border-left: 4px solid #f1c40f;
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #f1c40f;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #d4ac0d;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* --- OYUN ALANI ÖZEL TASARIMLARI --- */
+        #cow {
+            font-size: 80px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform 0.1s;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 250px;
+            height: 25px;
+            background-color: #e0e0e0;
+            border-radius: 15px;
+            margin: 20px auto;
+            border: 3px solid #ccc;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #milk-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #ffffff;
+            transition: width 0.1s;
+        }
+
+        #customer-area {
+            display: none; 
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        #customer {
+            font-size: 80px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        #customer:hover { transform: scale(1.1); }
+
+        .dollar-drop {
+            position: fixed;
+            top: -50px;
+            font-size: 40px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="ciftlik-muzigi.mp3" loop></audio>
+    <audio id="milkSound" src="sagim-sesi.mp3" loop></audio>
+    <audio id="customerSound" src="koylu-sesi.mp3"></audio>
+    <audio id="moneySound" src="para-sesi.mp3"></audio>
+
+    <div id="scene1" class="scene active">
+        <h2>FORMASYON görmüş paptyalar bunlar ona göre... 🌼</h2>
+        <p>eee tıkla Papatyalara hadi :)</p>
+        <div class="bouquet-area" onclick="openLetter()"> <img src="image.png" width="200" alt="Papatya Resmi"></div>
+    </div>
+
+    <div id="scene2" class="scene">
+        <h2>💌 Evrenden bir mesaj var </h2>
+        <div class="letter-content">
+            <p>Sevgili <strong>Mrs. Selfdemir</strong>,</p>
+            <p>Bugün is a very special day becouse this is woman's day ve bu da sana minik bir sürprizim 
+            bu arada "Gaçaman gurtulaman Adıyaman polisinden Sude (NAZ) Hanım"</p>
+            <p>Saygılarımla<br><strong> Mr. Yaman</strong></p>
+        </div>
+        <button onclick="startGame()">Sürprize Tıkla 🎁</button>
+    </div>
+        
+    <div id="scene3" class="scene">
+        <h2>🐄 Mini Çiftlik Macerası</h2>
+        <p>Süt sağmak için ineğe <strong>basılı tut</strong>!</p>
+        
+        <div id="cow" onmousedown="startMilking(event)" onmouseup="stopMilking()" onmouseleave="stopMilking()" ontouchstart="startMilking(event)" ontouchend="stopMilking()">🐄</div>
+        
+        <div class="progress-container">
+            <div id="milk-bar"></div>
+        </div>
+        <h3 id="bucket-status">🪣 Kova Boş</h3>
+
+        <div id="customer-area">
+            <div id="customer" onclick="sellMilk()">👩‍🌾</div>
+            <p>Müşteri geldi! Sütü satmak için ona tıkla 💰</p>
+        </div>
+    </div>
+
+    <div id="scene4" class="scene">
+        <h2>🎉 MISSION COMPLETED 🎉</h2>
+        <p>yapıyosun bu sporu son olarak <strong>MAŞALLAH</strong> 🧿 </p>
+        <video id="myVideo" controls>
+            <source src="VID-20260129-WA0012.mp4" type="video/mp4">
+            Tarayıcınız video oynatmayı desteklemiyor.
+        </video>
+        <br>
+        <button id="btnRestart" style="display: none;" onclick="restartAll()">Başa Dön 🔄</button>
+    </div>
+
+    <script>
+        function showScene(sceneId) {
+            document.querySelectorAll('.scene').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            document.getElementById(sceneId).classList.add('active');
+        }
+
+        function openLetter() {
+            showScene('scene2');
+        }
+
+        function startGame() {
+            showScene('scene3');
+            // Oyun başladığında çiftlik müziğini çal
+            document.getElementById('bgMusic').play().catch(e => console.log("Otomatik oynatma engellendi:", e));
+        }
+
+        // --- OYUN MANTIĞI DEĞİŞKENLERİ ---
+        let fillInterval;
+        let milkLevel = 0;
+        let isFull = false;
+        
+        function startMilking(e) {
+            if (isFull) return; 
+            if(e) e.preventDefault(); 
+            
+            document.getElementById('cow').style.transform = 'scale(0.9)'; 
+            
+            // Sağım sesini başlat
+            document.getElementById('milkSound').play();
+
+            fillInterval = setInterval(() => {
+                milkLevel += 2;
+                document.getElementById('milk-bar').style.width = milkLevel + '%';
+
+                if (milkLevel >= 100) {
+                    milkLevel = 100;
+                    isFull = true;
+                    stopMilking();
+                    document.getElementById('bucket-status').innerText = "🥛 Kova Doldu!";
+                    document.getElementById('customer-area').style.display = 'block'; 
+                    
+                    // Kova dolduğunda köylü sesini çal
+                    document.getElementById('customerSound').play();
+                }
+            }, 50);
+        }
+
+        function stopMilking() {
+            clearInterval(fillInterval);
+            document.getElementById('cow').style.transform = 'scale(1)'; 
+            
+            // Sağım sesini durdur
+            document.getElementById('milkSound').pause();
+        }
+
+        function sellMilk() {
+            document.getElementById('customer').style.display = 'none'; 
+            document.getElementById('bucket-status').innerText = "Süt satıldı! Harikasın! 💸";
+            
+            // Satış yapıldığında para sesini çal ve arka plan müziğini durdur
+            document.getElementById('moneySound').play();
+            document.getElementById('bgMusic').pause();
+            
+            createDollarRain(); 
+
+            setTimeout(() => {
+                showScene('scene4'); 
+                document.getElementById('myVideo').play();
+                clearDollars(); 
+            }, 3000);
+        }
+
+        function createDollarRain() {
+            for(let i = 0; i < 40; i++) {
+                let dollar = document.createElement('div');
+                dollar.innerText = '💵';
+                dollar.className = 'dollar-drop';
+                dollar.style.left = Math.random() * 100 + 'vw';
+                dollar.style.transition = 'transform ' + (Math.random() * 2 + 1.5) + 's linear';
+                
+                document.body.appendChild(dollar);
+
+                setTimeout(() => {
+                    dollar.style.transform = 'translateY(110vh)';
+                }, 50);
+            }
+        }
+
+        function clearDollars() {
+            document.querySelectorAll('.dollar-drop').forEach(d => d.remove());
+        }
+
+        document.getElementById('myVideo').addEventListener('ended', function() {
+            document.getElementById('btnRestart').style.display = 'inline-block';
+        });
+
+        function restartAll() {
+            milkLevel = 0;
+            isFull = false;
+            document.getElementById('milk-bar').style.width = '0%';
+            document.getElementById('bucket-status').innerText = "🪣 Kova Boş";
+            document.getElementById('customer-area').style.display = 'none';
+            document.getElementById('customer').style.display = 'block';
+            document.getElementById('btnRestart').style.display = 'none';
+            
+            // Tüm sesleri başa sar ve durdur
+            ['bgMusic', 'milkSound', 'customerSound', 'moneySound'].forEach(id => {
+                let audio = document.getElementById(id);
+                audio.pause();
+                audio.currentTime = 0;
+            });
+            
+            showScene('scene1');
+        }
+    </script>
+</body>
+</html>
